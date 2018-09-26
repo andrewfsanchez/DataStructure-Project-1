@@ -10,22 +10,24 @@ LinkedList::LinkedList()
 
 void LinkedList::search(std::string value)
 {
-	nodePointer p= head;
+	nodePointer p = head;
 	int count = 1;
+	bool found = false;
 	while (p != NULL)
 	{
-		if (p->data.find(value)!=value.npos)
+		if (p->data.find(value) != std::string::npos)
 		{
-			std::cout <<count<< " "<< p->data<<"\n";
-			return;
+			std::cout << count << " " << p->data << "\n";
+			found = true;
 		}
 		p = p->next;
 		count++;
 	}
 
-	std::cout << "not found\n";
+	if (!found)
+		std::cout << "not found\n";
 
-	
+
 }
 
 
@@ -33,7 +35,7 @@ void LinkedList::addNode(std::string value)
 {
 	if (value.size() > 80)
 	{
-		std::cout << "Text too long. Please keep below 80 characters.";
+		//std::cout << "Text too long. Please keep below 80 characters.";
 		return;
 	}
 
@@ -57,32 +59,37 @@ void LinkedList::addNode(int index, std::string value)
 {
 	if (value.size() > 80)
 	{
-		std::cout << "Text too long. Please keep below 80 characters.";
 		return;
 	}
 
 	nodePointer newNode = new nodeObject;
 	newNode->data = value;
+	bool check = true;
 
 	if (index == 0)
 	{
 		newNode->next = head;
 		head = newNode;
 	}
-	else 
+	else
 	{
 		nodePointer track = head;
 
-		for (int i = 0; i < index-1; i++)
+		for (int i = 0; i < index - 1; i++)
 		{
-			if (track->next != NULL)
+			if (track != NULL)
 				track = track->next;
 			else
+			{
+				check = false;
 				i = index;
+			}
 		}
-
-		newNode->next = track->next;
-		track->next = newNode;
+		if (track != NULL &&check)
+		{
+			newNode->next = track->next;
+			track->next = newNode;
+		}
 	}
 
 }
@@ -90,12 +97,10 @@ void LinkedList::editNode(int index, std::string value)
 {
 	if (index < 0)
 	{
-		std::cout << "Invalid line.\n";
 		return;
 	}
-	else if(head==NULL)
+	else if (head == NULL)
 	{
-		std::cout << "No lines to edit.\n";
 		return;
 	}
 
@@ -107,7 +112,6 @@ void LinkedList::editNode(int index, std::string value)
 			p = p->next;
 		else
 		{
-			std::cout << "You have to add this line before being able to edit it.\n";
 			return;
 		}
 	}
@@ -119,14 +123,12 @@ void LinkedList::deleteNode(int index)
 {
 	if (head == NULL)
 	{
-		std::cout << "No lines to delete\n";
 		return;
 	}
 	if (index < 0)
 	{
-		std::cout << "Invalind line\n";
 		return;
-		
+
 	}
 	if (index == 0)
 	{
@@ -134,7 +136,7 @@ void LinkedList::deleteNode(int index)
 		delete head;
 		head = p;
 	}
-	else 
+	else
 	{
 		nodePointer p;
 		nodePointer q;
@@ -156,7 +158,7 @@ void LinkedList::deleteNode(int index)
 
 		p->next = q->next;
 		delete q; //Valgrind on ubuntu
-	
+
 
 	}
 
@@ -168,10 +170,11 @@ void LinkedList::printList()
 	int line = 1;
 	while (p != NULL)
 	{
-		std::cout << line<< " "<<p->data << "\n";
+		std::cout << line << " " << p->data << "\n";
 		p = p->next;
 		line++;
 	}
-	std::cout << "\n";
+
 
 }
+
